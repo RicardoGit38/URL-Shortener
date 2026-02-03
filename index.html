@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acortador Py</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 400px; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; }
+        button { background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        button:hover { background-color: #0056b3; }
+        #resultado { margin-top: 15px; word-break: break-all; color: #28a745; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>✂️ Acortador de URLs</h2>
+        <input type="text" id="urlInput" placeholder="Pega tu enlace largo aquí...">
+        <button onclick="acortarUrl()">Acortar Link</button>
+        <p id="resultado"></p>
+    </div>
+
+    <script>
+        async function acortarUrl() {
+            const urlOriginal = document.getElementById('urlInput').value;
+            const resultado = document.getElementById('resultado');
+
+            // 1. Llamamos a TU API (Endpoint /acortar)
+            try {
+                const response = await fetch('/acortar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: urlOriginal })
+                });
+
+                const data = await response.json();
+
+                // 2. Mostramos la respuesta
+                resultado.innerHTML = `¡Listo! <br> <a href="${data.short_url}" target="_blank">${data.short_url}</a>`;
+            } catch (error) {
+                resultado.innerText = "Hubo un error al conectar con el servidor.";
+            }
+        }
+    </script>
+</body>
+</html>

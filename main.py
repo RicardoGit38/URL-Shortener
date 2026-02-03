@@ -1,3 +1,4 @@
+from fastapi.responses import FileResponse
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
@@ -29,7 +30,13 @@ def get_db():
 class URLSolicitud(BaseModel):
     url: str
 
+
 # --- RUTAS ---
+
+# Nueva función para la ruta raíz
+@app.get("/")
+def read_root():
+    return FileResponse("index.html")
 
 @app.post("/acortar")
 def crear_url_corta(solicitud: URLSolicitud, db: Session = Depends(get_db)):
